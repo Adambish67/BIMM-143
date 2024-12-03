@@ -1,0 +1,366 @@
+---
+title: "Lab09: Structural Bioinformatics pt. 1"
+author: "Adam Bisharat"
+format: pdf
+---
+
+The main database for structural data is called the PDB (protein Data Bank). Let's see what it contains:
+
+
+```{r}
+PDB <- read.csv("ProteinData.csv" , row.names = 1)
+
+PDB
+```
+```{r}
+PDB$Total
+
+```
+
+```{r}
+as.numeric(sub(",", "", PDB$Total))
+
+```
+
+I could turn this into a function to fix the whole table or any future table I read like this:
+
+```{r}
+x <- PDB$Total
+as.numeric(sub(",", "", x))
+```
+
+```{r}
+comma2numeric <- function(x) {
+  as.numeric(sub(",", "", x))
+}
+```
+
+```{r}
+comma2numeric(PDB$X.ray)
+```
+
+
+```{r}
+apply(PDB, 2, comma2numeric)
+```
+
+##Or try a differnt read/import funciton:
+
+```{r}
+library(readr)
+PDBN <- read_csv("ProteinData.csv")
+
+PDBN$Total
+```
+
+```{r}
+sum(PDBN$Total)
+```
+
+
+
+> Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+Combined.Percent <- ((sum(PDBN$'X-ray') + sum(PDBN$'EM') ) / sum(PDBN$Total) ) * 100
+
+XRay.Percent <- (sum(PDBN$'X-ray') / sum(PDBN$Total) ) * 100
+
+EM.Percent <- sum(PDBN$'EM') / sum(PDBN$Total)  * 100
+
+
+Combined.Percent 
+
+XRay.Percent
+
+EM.Percent 
+
+```
+
+
+
+
+```{r}
+PDBN
+```
+
+
+> Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+
+PDBN$Total[1] / sum(PDBN$'Total')
+
+
+```
+
+
+
+Molstar Viewer: 1HSG
+
+![](1HSG.png)
+
+
+![](1HSG (2).png)
+
+
+![](1HSG (3).png)
+
+
+![](1HSG (4).png)
+
+
+
+
+> Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+226114
+
+
+Bio3D Package very useful
+
+```{r}
+library(bio3d)
+
+pdb <- read.pdb("1hsg")
+pdb
+```
+
+
+```{r}
+attributes(pdb)
+
+head(pdb$atom)
+```
+
+
+
+
+> Q4: Water molecules normally have 3 atoms. Why do we see just one atom per water molecule in this structure?
+
+Hydrogens have little to no electron density.
+
+> Q5: There is a critical “conserved” water molecule in the binding site. Can you identify this water molecule? What residue number does this water molecule have
+
+308
+
+![](1HSG (4).png)
+
+> Q6: Generate and save a figure clearly showing the two distinct chains of HIV-protease along with the ligand. You might also consider showing the catalytic residues ASP 25 in each chain and the critical water (we recommend “Ball & Stick” for these side-chains). Add this figure to your Quarto document.
+
+Discussion Topic: Can you think of a way in which indinavir, or even larger ligands and substrates, could enter the binding site?
+
+
+
+
+> Q7: How many amino acid residues are there in this pdb object? 
+
+```{r}
+sum(pdb$calpha)
+
+length (pdbseq(pdb))
+```
+198 amino acids
+
+
+> Q8: Name one of the two non-protein residues? 
+
+
+
+> Q9: How many protein chains are in this structure? 
+
+```{r}
+unique(pdb$atom$chain)
+```
+2 chains
+
+
+
+
+```{r}
+adk <- read.pdb("6s36")
+adk
+```
+
+```{r}
+m <- nma(adk)
+
+plot(m)
+```
+
+Writes PDB file to make animation of predicted motions.
+```{r}
+mktrj(m, file="adk_m7.pdb")
+
+```
+
+I can open this in Mol* to play the trajectory...
+
+
+
+CLASS 11
+
+
+
+```{r}
+#install.packages("bio3d")
+
+#library(bio3d)
+```
+
+## Here we will find and analyze all ADK structures in the PDB database
+
+
+```{r}
+aa <- get.seq("1ake_A")
+```
+
+
+ints
+
+
+> Q10. Which of the packages above is found only on BioConductor and not CRAN? 
+
+The `msa` package is from BioConductor
+
+> Q11. Which of the above packages is not found on BioConductor or CRAN?: 
+
+N/A
+
+> Q12. True or False? Functions from the devtools package can be used to install packages from GitHub and BitBucket? 
+
+True
+
+> Q13. How many amino acids are in this sequence, i.e. how long is this sequence? 
+
+```{r}
+length(aa)
+```
+
+```{r}
+attributes(aa)
+```
+
+
+```{r}
+ncol(aa$ali)
+```
+
+```{r}
+#b <- blast.pdb(aa)
+```
+
+
+```{r}
+#hits <- plot(b)
+#head(hits$pdb.id)
+```
+
+```{r}
+hits <- NULL
+hits$pdb.id <- c('1AKE_A','6S36_A','6RZE_A','3HPR_A','1E4V_A','5EJE_A','1E4Y_A','3X2S_A','6HAP_A','6HAM_A','4K46_A','3GMT_A','4PZL_A')
+```
+
+```{r}
+#library(BiocManager)
+#BiocManager::install("msa")
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+```
+
+```{r}
+pdbs
+```
+
+
+
+```{r}
+pc.xray <- pca(pdbs)
+plot(pc.xray)
+```
+
+
+```{r}
+# Calculate RMSD
+rd <- rmsd(pdbs)
+
+# Structure-based clustering
+hc.rd <- hclust(dist(rd))
+grps.rd <- cutree(hc.rd, k=3)
+
+plot(pc.xray, 1:2, col="grey50", bg=grps.rd, pch=21, cex=1)
+```
+
+
+
+```{r}
+uniprot <- 248838887
+pdb <- 195610
+
+pdb/uniprot * 100
+```
+
+
+
+
+
+
+
+```{r}
+pc1 <- mktrj(pc.xray, pc=1, file="pc_1.pdb")
+```
+
+
+```{r}
+df <- data.frame(PC1=pc.xray$z[,1], 
+                 PC2=pc.xray$z[,2], 
+                 col=as.factor(grps.rd),
+                 ids=ids)
+
+p <- ggplot(df) + 
+  aes(PC1, PC2, col=col, label=ids) +
+  geom_point(size=2) +
+  geom_text_repel(max.overlaps = 20) +
+  theme(legend.position = "none")
+p
+```
+
+
+```{r}
+modes <- nma(pdbs)
+plot(modes, pdbs, col=grps.rd)
+```
+
+
+
+
+
+
+> Q14. What do you note about this plot? Are the black and colored lines similar or different? Where do you think they differ most and why?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

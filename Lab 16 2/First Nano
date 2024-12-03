@@ -1,0 +1,19 @@
+this is a simple text editor called nano.
+
+Some key unix cmds so far
+
+pwd: print working dir
+cd: change dir
+ls: list out files
+mkdir: make a new dir/folder
+nano: a basic text editor
+rm: WILL REMOVE EVERYTHING, USE WITH CAUTION! MAKE SURE YOU ARE IN CORRECT FILE LOCATION AND SPECIFY WHICH FILES TO REMOVE
+an intern deleted the entirety of toy story using rm on accident and was saved by a lady who had a back up on materntiy leave
+
+
+
+
+ssh -i "~/Downloads/bimm143_abisharatkey.pem" ubuntu@ec2-18-236-180-130.us-west-2.compute.amazonaws.com
+
+scp -i "~/Downloads/bimm143_abisharatkey.pem" ubuntu@ec2-18-236-180-130.us-west-2.compute.amazonaws.com:~work/mm-second.x.zebrafish.tsv myresults.tsv
+
