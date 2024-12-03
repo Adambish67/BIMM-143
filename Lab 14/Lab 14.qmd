@@ -1,0 +1,271 @@
+---
+title: "Lab 14"
+author: "Adam Bisharat"
+format: pdf
+---
+
+Today we will complete an RNASeq analysis from counts to pathways
+
+We will work with data on differential analysis of lung fibroblasts in response to loss of the developmental transcription factor. 
+
+```{r}
+library(DESeq2)
+```
+
+```{r}
+# Read the metadata and count files
+metaFile <- "GSE37704_metadata.csv"
+countFile <- "GSE37704_featurecounts.csv"
+
+# Read in the metadata file using the file path as a string
+colData <- read.csv(metaFile, row.names=1)
+head(colData)
+
+```
+
+```{r}
+counts <- read.csv(countFile, header=TRUE, row.names=1)
+
+colnames(counts)
+```
+
+
+```{r}
+metadata <- read.csv("GSE37704_metadata.csv")
+metadata$id 
+
+
+```
+
+
+```{r}
+countData <- counts[,-1]
+colnames(countData) == metadata$id
+```
+
+> How many genes do we have?
+
+```{r}
+to.keep <- rowSums(countData) != 0 
+countData <- countData[to.keep,]
+
+
+nrow(countData)
+```
+
+
+
+```{r}
+library(DESeq2)
+
+dds = DESeqDataSetFromMatrix(countData=countData,
+                             colData=colData,
+                             design=~condition)
+dds = DESeq(dds)
+```
+
+```{r}
+res <- results(dds)
+head(res)
+```
+
+
+
+```{r}
+dds = DESeqDataSetFromMatrix(countData=countData,
+                             colData=colData,
+                             design=~condition)
+dds = DESeq(dds)
+
+dds
+```
+
+```{r}
+plot( res$log2FoldChange, -log(res$padj) )
+
+```
+add some color
+
+```{r}
+
+mycols <- rep("gray", nrow(res))
+
+mycols[ abs(res$log2FoldChange) > 2 ] <- "red"
+
+inds <- (res$padj < 0.01) & (abs(res$log2FoldChange) > 2)
+mycols[ inds ] <- "blue"
+
+
+plot(res$log2FoldChange, -log10(res$padj), col=mycols, 
+     xlab="Log2(FoldChange)", ylab="-Log10(P-value)")
+
+```
+
+```{r}
+library("AnnotationDbi")
+library("org.Hs.eg.db")
+
+# Check available columns
+columns(org.Hs.eg.db)
+
+# Add SYMBOL annotation
+res$symbol = mapIds(org.Hs.eg.db,
+                    keys=row.names(res), 
+                    keytype="ENSEMBL",
+                    column="SYMBOL",
+                    multiVals="first")
+
+# Add ENTREZID annotation
+res$entrez = mapIds(org.Hs.eg.db,
+                    keys=row.names(res),
+                    keytype="ENSEMBL",
+                    column="ENTREZID",
+                    multiVals="first")
+
+# Add GENENAME annotation
+res$name = mapIds(org.Hs.eg.db,
+                  keys=row.names(res),
+                  keytype="ENSEMBL",
+                  column="GENENAME",
+                  multiVals="first")
+
+# View the first 10 rows
+head(res, 10)
+
+```
+
+```{r}
+# Reorder results by adjusted p-value
+res <- res[order(res$padj), ]
+
+# Save the ordered results to a CSV file
+write.csv(res, file="deseq_results.csv")
+
+```
+
+
+##Section 2. Pathway Analysis
+
+
+```{r}
+BiocManager::install( c("pathview", "gage", "gageData") )
+```
+
+```{r}
+library(pathview)
+
+library(gage)
+library(gageData)
+
+data(kegg.sets.hs)
+data(sigmet.idx.hs)
+
+# Focus on signaling and metabolic pathways only
+kegg.sets.hs = kegg.sets.hs[sigmet.idx.hs]
+
+# Examine the first 3 pathways
+head(kegg.sets.hs, 3)
+```
+
+
+```{r}
+foldchanges = res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+
+
+```{r}
+keggres = gage(foldchanges, gsets=kegg.sets.hs)
+```
+
+```{r}
+nrow(countData)
+nrow(res)
+```
+
+
+
+```{r}
+attributes(keggres)
+head(keggres$less,4)
+```
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110")
+```
+
+![](hsa04110.pathview.png)
+
+
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110", kegg.native=FALSE)
+
+keggrespathways <- rownames(keggres$greater)[1:5]
+
+
+keggresids = substr(keggrespathways, start=1, stop=8)
+keggresids
+
+pathview(gene.data=foldchanges, pathway.id=keggresids, species="hsa")
+```
+
+## Pathway Images
+
+### Pathway: hsa04640
+![](hsa04640.pathview.png)
+
+### Pathway: hsa04630
+![](hsa04630.pathview.png)
+
+### Pathway: hsa00140
+![](hsa00140.pathview.png)
+
+### Pathway: hsa04142
+![](hsa04142.pathview.png)
+
+### Pathway: hsa04330
+![](hsa04330.pathview.png)
+
+
+
+##Section 3. Gene Ontology (GO)
+
+```{r}
+data(go.sets.hs)
+data(go.subs.hs)
+
+# Focus on Biological Process subset of GO
+gobpsets = go.sets.hs[go.subs.hs$BP]
+
+gobpres = gage(foldchanges, gsets=gobpsets, same.dir=TRUE)
+
+lapply(gobpres, head)
+```
+
+
+
+##Section 4. Reactome Analysis
+
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "symbol"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+write.table(sig_genes, file="significant_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+![](R-HSA-68886.png)
+
+
+
+
+
+
+
+##Save Results
+
+```{r}
+write.csv(res, file="myresults.csv")
+```
+
+
+
