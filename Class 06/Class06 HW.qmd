@@ -1,0 +1,27 @@
+```{r}
+
+library(bio3d)
+
+analyze_proteins <- function(pdb_files) {
+
+ 
+  for (pdb_id in pdb_files) {
+   
+    pdb <- read.pdb(pdb_id)
+  
+    chainA <- trim.pdb(pdb, chain = "A", elety = "CA")
+ 
+    plotb3(chainA$atom$b, typ = "l", 
+           ylab = paste("B-factor -", pdb_id),
+           main = paste("B-factor Plot for", pdb_id))
+  }
+}
+
+
+pdb_files <- c("4AKE", "1AKE", "1E4Y")
+analyze_proteins(pdb_files)
+
+```
+The analyze_proteins function takes a vector of PDB IDs as input, which are identifiers for protein structures in the PDB database. The function reads each PDB file, extracts chain A, filters for CA atoms, and plots the B-factor, a measure of atomic displacement. To use the function, provide a vector of PDB IDs like c("4AKE", "1AKE", "1EY"). The output is a series of B-factor plots, one for each protein structure analyzed.
+
+
