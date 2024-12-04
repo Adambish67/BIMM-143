@@ -9,8 +9,10 @@ December 3rd, 2024
       <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.dribbble.com%2Fusers%2F795597%2Fscreenshots%2F3443932%2Fcomp-2.gif&f=1&nofb=1&ipt=349a313e80b192d79c0c29145d77fb613f03a5cb9478f77778026399bd79b90c&ipo=images" alt="GitHub Logo" width="300">
     </td>
     <td>
+      <p>
+        Below lies my available classwork for <a href="https://bioboot.github.io/bimm143_F24/schedule/">BIMM143 F24</a> at UC San Diego.
+      </p>
       <ul>
-      Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/schedule/) at UC San Diego:
         <li><a href="https://github.com/Adambish67/BIMM143_Github/tree/main/Lab%204%20Optional%20Extra%20Credit">Lab 4: Bioinformatics data analysis with R</a></li>
         <li><a href="https://github.com/Adambish67/BIMM143_Github/tree/main/Class05">Lab 5: Data exploration and visualization in R</a></li>
         <li><a href="https://github.com/Adambish67/BIMM143_Github/tree/main/Class%2006">Lab 6: R functions and R packages from CRAN and BioConductor</a></li>
