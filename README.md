@@ -35,5 +35,5 @@ Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bi
 
 
 
-<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.dribbble.com%2Fusers%2F795597%2Fscreenshots%2F3443932%2Fcomp-2.gif&f=1&nofb=1&ipt=349a313e80b192d79c0c29145d77fb613f03a5cb9478f77778026399bd79b90c&ipo=images" alt="GitHub Logo" width="50">
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.dribbble.com%2Fusers%2F795597%2Fscreenshots%2F3443932%2Fcomp-2.gif&f=1&nofb=1&ipt=349a313e80b192d79c0c29145d77fb613f03a5cb9478f77778026399bd79b90c&ipo=images" alt="GitHub Logo" width="500">
 
