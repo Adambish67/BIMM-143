@@ -1,7 +1,9 @@
 # BIMM143
+
+Adam Bisharat (A18028472)
 December 3rd, 2024
 
-Classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/schedule/) at UC San Diego. This is my first time using git.
+Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/schedule/) at UC San Diego.
 
 
 [Lab 4: Bioinformatics data analysis with R](https://github.com/Adambish67/BIMM143_Github/tree/main/Lab%204%20Optional%20Extra%20Credit)
