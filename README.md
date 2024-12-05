@@ -1,8 +1,6 @@
-## BIMM143
-
-# Adam Bisharat (A18028472)
-
-# December 3rd, 2024
+# BIMM143
+### Adam Bisharat (A18028472)
+### December 3rd, 2024
 
 
 Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/schedule/) at UC San Diego.
