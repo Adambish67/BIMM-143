@@ -5,9 +5,6 @@
 
 Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bimm143_F24/schedule/) at UC San Diego.
 
-
-Lab 4: Bioinformatics data analysis with R
-
 [Lab 5: Data exploration and visualization in R](https://github.com/Adambish67/BIMM143_Github/blob/main/Class05/Class05.md)
 
 [Lab 6: R functions and R packages from CRAN and BioConductor](https://github.com/Adambish67/BIMM143_Github/blob/main/Class%2006/Class06.md)
