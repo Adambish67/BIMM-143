@@ -1,7 +1,7 @@
 ---
 title: "Lab09: Structural Bioinformatics pt. 1"
 author: "Adam Bisharat"
-format: pdf
+format: gfm
 ---
 
 The main database for structural data is called the PDB (protein Data Bank). Let's see what it contains:
@@ -312,10 +312,17 @@ pc1 <- mktrj(pc.xray, pc=1, file="pc_1.pdb")
 
 
 ```{r}
+ids <- rownames(pc.xray$z)  # Use row names from pc.xray$z if applicable
+
 df <- data.frame(PC1=pc.xray$z[,1], 
                  PC2=pc.xray$z[,2], 
                  col=as.factor(grps.rd),
-                 ids=ids)
+                 label = ids
+        )
+
+library(ggplot2)
+library(ggrepel)
+
 
 p <- ggplot(df) + 
   aes(PC1, PC2, col=col, label=ids) +
