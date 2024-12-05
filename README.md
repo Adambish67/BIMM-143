@@ -18,6 +18,7 @@ Below lies my available classwork for [BIMM143 F24](https://bioboot.github.io/bi
 [Lab 10: Halloween Candy Mini-Project](https://github.com/Adambish67/BIMM143_Github/blob/main/Class10%20(Halloweeen)/Class10%20(Halloween%20mini-project).md)
 
 [Lab 11: Structural Bioinformatics (pt2. Focus on new AlphaFold2)](https://github.com/Adambish67/BIMM143_Github/blob/main/Lab09/Class09.md)
+
 Note: Class 9 file was used for both Lab 9 and 11
 
 [Lab 12: Genome informatics (online class)](https://github.com/Adambish67/BIMM143_Github/blob/main/Class%2012/Class12.md)
