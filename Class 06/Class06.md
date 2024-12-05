@@ -1,6 +1,7 @@
 # Class06
 Adam Bisharat
 
+
 Q1. Write a function grade() to determine an overall grade from a vector
 of student homework assignment scores dropping the lowest single score.
 If a student misses a homework (i.e. has an NA value) this can be used
