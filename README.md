@@ -1,4 +1,4 @@
-Here is my readme doc please edit it to fit my request: # BIMM143
+# BIMM143
 
 Adam Bisharat (A18028472)
 
